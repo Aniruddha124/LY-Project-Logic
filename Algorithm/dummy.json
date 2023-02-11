@@ -1,0 +1,60 @@
+{
+    "bitcoin": {
+      "inbound": [
+        {
+          "sender": {
+            "address": "bc1q5sn8rnj4epfh8z7elm3fnqkrs6pmdfa2acehnl",
+            "annotation": null
+          },
+          "receiver": {
+            "address": "bc1qcj9ujyvrf94wu0902g2lnklzlyn5j5nrr44hwp",
+            "annotation": null
+          },
+          "amount": 0.009822,
+          "depth": 1,
+          "count": 1
+        }
+      ],
+      "outbound": [
+        {
+          "sender": {
+            "address": "bc1qcj9ujyvrf94wu0902g2lnklzlyn5j5nrr44hwp",
+            "annotation": null
+          },
+          "receiver": {
+            "address": "bc1qwnfz2tu83hudpqt9k98r73h50w0t205uflh8vc",
+            "annotation": null
+          },
+          "amount": 0.00885823,
+          "depth": 1,
+          "count": 1
+        },
+        {
+          "sender": {
+            "address": "bc1qcj9ujyvrf94wu0902g2lnklzlyn5j5nrr44hwp",
+            "annotation": null
+          },
+          "receiver": {
+            "address": "15yoUwCmEPQofDKUKHc7gzrZk3KNnZvnBM",
+            "annotation": null
+          },
+          "amount": 0.0009623300000000001,
+          "depth": 1,
+          "count": 1
+        },
+        {
+          "sender": {
+            "address": "bc1qcj9ujyvrf94wu0902g2lnklzlyn5j5nrr44hwp",
+            "annotation": null
+          },
+          "receiver": {
+            "address": "",
+            "annotation": null
+          },
+          "amount": 0.00000144,
+          "depth": 1,
+          "count": 1
+        }
+      ]
+    }
+  }

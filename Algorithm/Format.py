@@ -3,11 +3,11 @@ import pandas as pd
 import json
 # from TransactionDetails import *
 
-with open('dummy2.json') as f:
-    data = json.load(f)
-print(data)
+# with open('dummy2.json') as f:
+#     data = json.load(f)
+# print(data)
 
-def formatTransactionDetails(json):
+def format_transaction_details(json):
     df = pd.DataFrame(columns=["tx_hash", "in_degree", "out_degree", "in_btc", "out_btc", "total_btc", "mean_in_btc", "mean_out_btc"])
     print(df)
     in_degree = len(json['bitcoin']['inputs'])
@@ -24,5 +24,5 @@ def formatTransactionDetails(json):
     
     return(df)
 
-df = formatTransactionDetails(data)
-print(df)
+# df = format_transaction_details(data)
+# print(df)

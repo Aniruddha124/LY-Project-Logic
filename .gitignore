@@ -1,1 +1,3 @@
 .dist
+Algorithm/venv/
+Algorithm/__pycache__/

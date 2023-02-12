@@ -24,8 +24,12 @@ def predict(address):
         is_malicious = model.predict([[in_degree, out_degree, in_btc, out_btc, total_btc, mean_in_btc, mean_out_btc]])
         # print(is_malicious)
         df['is_malicious'].iloc[i] = is_malicious[0]
-    return(df)
+    nmal = sum(df['is_malicious'])
+    mal = nmal/len(df)
+    return(df, mal, nmal)
 
 
-prediction = predict("bc1qcj9ujyvrf94wu0902g2lnklzlyn5j5nrr44hwp")
+prediction, total_malicious_tx, malicious_score = predict("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")
 print(prediction)
+print(f'Total malicious transactions: {total_malicious_tx}')
+print(f'Malicious score: {malicious_score}')

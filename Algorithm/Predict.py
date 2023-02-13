@@ -29,7 +29,7 @@ def predict(address):
     return(df, mal, nmal)
 
 
-prediction, total_malicious_tx, malicious_score = predict("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")
-print(prediction)
-print(f'Total malicious transactions: {total_malicious_tx}')
-print(f'Malicious score: {malicious_score}')
+# prediction, total_malicious_tx, malicious_score = predict("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")
+# print(prediction)
+# print(f'Total malicious transactions: {total_malicious_tx}')
+# print(f'Malicious score: {malicious_score}')

@@ -1,7 +1,8 @@
 from flask import Flask
 from WalletDetails import get_wallet_details
 from TransactionDetails import get_transaction_details
-from Predict import *
+from Predict import predict
+import pickle
 
 app = Flask(__name__)
 
@@ -21,7 +22,9 @@ def transaction_details(address):
     return details['data']
 
 @app.route('/predict/<address>')
-def predict(address):
+def predict_score(address):
+    with open('./Models/dt_model', 'rb') as f:
+        model = pickle.load(f)
     prediction_dataset, total_malicious_tx, malicious_score = predict(address)
     json = {'total_malicious_tx': total_malicious_tx, 'malicious_score': malicious_score}
     return json

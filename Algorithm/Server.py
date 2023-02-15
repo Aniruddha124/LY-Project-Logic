@@ -1,6 +1,7 @@
 from flask import Flask
 from WalletDetails import get_wallet_details
 from TransactionDetails import get_transaction_details
+from BlackListed import blacklisted
 from Predict import predict
 import pickle
 
@@ -28,6 +29,11 @@ def predict_score(address):
     prediction_dataset, total_malicious_tx, malicious_score = predict(address)
     json = {'total_malicious_tx': total_malicious_tx, 'malicious_score': malicious_score}
     return json
+
+@app.route('/blacklisted/<address>')
+def is_blacklisted(address):
+    isBlackListed = blacklisted(address)
+    return isBlackListed
 
 if __name__ == '__main__':
     app.run(debug=True)

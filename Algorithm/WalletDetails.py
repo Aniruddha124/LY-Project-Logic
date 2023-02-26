@@ -14,7 +14,7 @@ def get_wallet_details(address):
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-
+    # print(response.json())
     return(response.json())
 
 get_wallet_details("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")

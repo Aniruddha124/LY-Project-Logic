@@ -1,3 +1,4 @@
 .dist
 Algorithm/venv/
 Algorithm/__pycache__/
+Algorithm/Scraper/raw_dataset/

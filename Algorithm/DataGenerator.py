@@ -3,22 +3,38 @@ import pandas as pd
 import pickle
 import json
 import time
+import os
 from datetime import datetime
 from query import get_address_details
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
-def Generator(addresses, filename):
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+def Generator(addresses, filename, offset):
     df = pd.DataFrame(
         columns=[
             "address",
-            "in_btc", # Total BTC received or Inbound Amount
-            "out_btc", # Total BTC sent or Outbound Amount
+            "in_btc",  # Total BTC received or Inbound Amount
+            "out_btc",  # Total BTC sent or Outbound Amount
             "balance",
-            "in_degree", # Total number of inbound transactions
-            "out_degree", # Total number of outbound transactions
+            "in_degree",  # Total number of inbound transactions
+            "out_degree",  # Total number of outbound transactions
             "unique_in_degree",
             "unique_out_degree",
-            "mean_in_btc", # Average number of inbound transactions per address
-            "mean_out_btc", # Average number of outbound transactions per address
+            "mean_in_btc",  # Average number of inbound transactions per address
+            "mean_out_btc",  # Average number of outbound transactions per address
             "first_active",
             "last_active",
             "max_in_btc",
@@ -29,13 +45,23 @@ def Generator(addresses, filename):
             "out_standard_deviation",
             "in_transaction_frequency",
             "out_transaction_frequency",
-            "in_amount_frequency", # In Velocity
-            "out_amount_frequency", # Out Velocity
+            "in_amount_frequency",  # In Velocity
+            "out_amount_frequency",  # Out Velocity
         ]
     )
 
-    for address in addresses:
-        print(f"Scanning {address}")
+    dfError = pd.DataFrame(
+        columns=["address"])
+
+    filepath = './Datasets_Generated/' + str(filename) + '.csv'
+    errFilepath = './Datasets_Generated/' + str(filename) + '_skipped.csv'
+
+    for count, address in enumerate(addresses):
+
+        print(f"Scanning {count+offset}) {address}")
+        if (count+offset == 50):
+            break
+
         try:
             address_details = get_address_details(address)
 
@@ -49,8 +75,8 @@ def Generator(addresses, filename):
             unique_in_degree = address_details['data']['bitcoin']['address_stats'][0]['address']['uniqueSenders']
             unique_out_degree = address_details['data']['bitcoin']['address_stats'][0]['address']['uniqueReceivers']
 
-            mean_in_btc = in_btc / in_degree
-            mean_out_btc = out_btc / out_degree
+            mean_in_btc = (in_btc / in_degree) if (in_degree > 0) else 0
+            mean_out_btc = (out_btc / out_degree) if (out_degree > 0) else 0
 
             first_active = address_details['data']['bitcoin']['address_stats'][0]['address']['firstActive']['iso8601']
             last_active = address_details['data']['bitcoin']['address_stats'][0]['address']['lastActive']['iso8601']
@@ -70,12 +96,14 @@ def Generator(addresses, filename):
             in_standard_deviation = np.std(in_tx_values)
             out_standard_deviation = np.std(out_tx_values)
 
-            in_transaction_frequency = in_degree / (datetime.strptime(last_active, "%Y-%m-%dT%H:%M:%S%fZ") - datetime.strptime(first_active, "%Y-%m-%dT%H:%M:%S%fZ")).days
-            out_transaction_frequency = out_degree / (datetime.strptime(last_active, "%Y-%m-%dT%H:%M:%S%fZ") - datetime.strptime(first_active, "%Y-%m-%dT%H:%M:%S%fZ")).days
+            active_days_count = max((datetime.strptime(last_active, "%Y-%m-%dT%H:%M:%S%fZ") -
+                                     datetime.strptime(first_active, "%Y-%m-%dT%H:%M:%S%fZ")).days, 1)
+            in_transaction_frequency = in_degree / active_days_count
 
-            in_amount_frequency = in_btc / (datetime.strptime(last_active, "%Y-%m-%dT%H:%M:%S%fZ") - datetime.strptime(first_active, "%Y-%m-%dT%H:%M:%S%fZ")).days
-            out_amount_frequency = out_btc / (datetime.strptime(last_active, "%Y-%m-%dT%H:%M:%S%fZ") - datetime.strptime(first_active, "%Y-%m-%dT%H:%M:%S%fZ")).days
+            out_transaction_frequency = out_degree / active_days_count
 
+            in_amount_frequency = in_btc / active_days_count
+            out_amount_frequency = out_btc / active_days_count
 
             new_row = {
                 "address": address,
@@ -102,16 +130,26 @@ def Generator(addresses, filename):
                 "out_amount_frequency": out_amount_frequency,
             }
 
-            # print(new_row)
+            hdr = False if os.path.isfile(filepath) else True
+            df_temp = df
+            df_temp = df_temp.append(new_row, ignore_index=True)
+            df_temp.to_csv(filepath, index=False, mode="a", header=hdr)
 
-            df = df.append(new_row, ignore_index=True)
-        
-        except:
-            print(f"Something went wrong! Skipping {address}")
+            # df = df.append(new_row, ignore_index=True)
+            # df = pd.concat([df, new_row], ignore_index=True)
+
+        except Exception as e:
+            print(f"{bcolors.FAIL}{bcolors.BOLD}Error! {e}{bcolors.ENDC}")
+            new_row = {"address": address}
+            hdr = False if os.path.isfile(errFilepath) else True
+            df_temp = dfError
+            df_temp = df_temp.append(new_row, ignore_index=True)
+            df_temp.to_csv(errFilepath, index=False, mode="a", header=hdr)
             continue
 
-    print(df)
-    df.to_csv('./Datasets_Generated/' + str(filename) + '.csv', index=False)
+    # df.to_csv('./Datasets_Generated/' + str(filename) +
+    #           '.csv', index=False, header=True)
+
 
 def split(a, n):
     k, m = divmod(len(a), n)
@@ -120,13 +158,16 @@ def split(a, n):
 # addresses = ["bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx","bc1qgdjqv0av3q56jvd82tkdjpy7gdp9ut8tlqmgrpmv24sq90ecnvqqjwvw97"]
 # Generator(addresses,"Output")
 
+
 if __name__ == '__main__':
     dataframe = pd.read_csv('./Scraper/cleaned_dataset/heist_addresses.csv')
     addresses = dataframe['# address'].tolist()
-    split_data = list(split(addresses, 1000))
-    
-    section = 0 # Change this to the section you want to generate
-    
-    print(f"Processing Section {section} for {len(split_data[section])} Addresses")
+    split_data = list(split(addresses, 10))
 
-    Generator(split_data[section],"Output_" + str(section))
+    section = 0  # Change this to the section you want to generate
+    offset = 0  # chnage this to start from the nth row of the chosen section
+
+    print(
+        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
+
+    Generator(split_data[section][offset:], "Output_" + str(section), offset)

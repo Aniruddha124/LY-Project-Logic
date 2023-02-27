@@ -22,6 +22,30 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
+def addToCSV(row, df, filepath):
+    hdr = False if os.path.isfile(filepath) else True
+    df_temp = df
+    df_temp = df_temp.append(row, ignore_index=True)
+    df_temp.to_csv(filepath, index=False, mode="a", header=hdr)
+
+
+def addTransactionInfo(tx, transactionFilepath, dfTransactions):
+    hash = tx["transaction"]["hash"]
+    sender = tx["sender"]["address"]
+    receiver = tx["receiver"]["address"]
+    amount = tx["amount"]
+    timestamp = str(tx["transaction_more_info"][0]["timestamp"])
+
+    new_row = {
+        "hash": hash,
+        "sender": sender,
+        "receiver": receiver,
+        "amount": amount,
+        "timestamp": timestamp
+    }
+    addToCSV(new_row, dfTransactions, transactionFilepath)
+
+
 def Generator(addresses, filename, offset):
     df = pd.DataFrame(
         columns=[
@@ -50,18 +74,30 @@ def Generator(addresses, filename, offset):
         ]
     )
 
-    dfError = pd.DataFrame(
+    errDf = pd.DataFrame(
         columns=["address"])
 
-    filepath = './Datasets_Generated/' + str(filename) + '.csv'
-    errFilepath = './Datasets_Generated/' + str(filename) + '_skipped.csv'
+    dfTransactions = pd.DataFrame(
+        columns=[
+            "hash",
+            "sender",
+            "receiver",
+            "amount",
+            "timestamp",
+        ]
+    )
+
+    filepath = './Datasets_Generated/AddressInfo/' + str(filename) + '.csv'
+    transactionFilepath = './Datasets_Generated/TransactionInfo/' + \
+        "transaction_" + str(filename) + '.csv'
+    errFilepath = './Datasets_Generated/SkippedAddressInfo/' + \
+        str(filename) + '_skipped.csv'
 
     for count, address in enumerate(addresses):
 
         print(f"Scanning {count+offset}) {address}")
-        if (count+offset == 50):
+        if (count+offset == 101):
             break
-
         try:
             address_details = get_address_details(address)
 
@@ -130,21 +166,29 @@ def Generator(addresses, filename, offset):
                 "out_amount_frequency": out_amount_frequency,
             }
 
-            hdr = False if os.path.isfile(filepath) else True
-            df_temp = df
-            df_temp = df_temp.append(new_row, ignore_index=True)
-            df_temp.to_csv(filepath, index=False, mode="a", header=hdr)
+            addToCSV(new_row, df, filepath)
+            print(
+                f"{bcolors.OKGREEN}  [\u2713]  Address Info added {bcolors.ENDC}")
 
-            # df = df.append(new_row, ignore_index=True)
-            # df = pd.concat([df, new_row], ignore_index=True)
+            # incoming transaction info
+            for tx in address_details['data']['bitcoin']['incoming_transactions']:
+                addTransactionInfo(tx, transactionFilepath, dfTransactions)
+
+            # outgoing transaction info
+            for tx in address_details['data']['bitcoin']['outgoing_transactions']:
+                addTransactionInfo(tx, transactionFilepath, dfTransactions)
+
+            print(
+                f"{bcolors.OKGREEN}  [\u2713]  Transaction Info added {bcolors.ENDC}")
 
         except Exception as e:
             print(f"{bcolors.FAIL}{bcolors.BOLD}Error! {e}{bcolors.ENDC}")
+
             new_row = {"address": address}
-            hdr = False if os.path.isfile(errFilepath) else True
-            df_temp = dfError
-            df_temp = df_temp.append(new_row, ignore_index=True)
-            df_temp.to_csv(errFilepath, index=False, mode="a", header=hdr)
+            addToCSV(new_row, errDf, errFilepath)
+            print(
+                f"{bcolors.WARNING}  [\u2713]  Skipped Info added {bcolors.ENDC}")
+
             continue
 
     # df.to_csv('./Datasets_Generated/' + str(filename) +
@@ -170,4 +214,4 @@ if __name__ == '__main__':
     print(
         f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
 
-    Generator(split_data[section][offset:], "Output_" + str(section), offset)
+    Generator(split_data[section][offset:], "output_" + str(section), offset)

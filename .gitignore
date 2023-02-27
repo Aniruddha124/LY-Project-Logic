@@ -2,3 +2,8 @@
 Algorithm/venv/
 Algorithm/__pycache__/
 Algorithm/Scraper/raw_dataset/
+
+
+**/.env
+**/.venv/
+**/venv/

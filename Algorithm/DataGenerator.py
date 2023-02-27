@@ -124,7 +124,9 @@ if __name__ == '__main__':
     dataframe = pd.read_csv('./Scraper/cleaned_dataset/heist_addresses.csv')
     addresses = dataframe['# address'].tolist()
     split_data = list(split(addresses, 1000))
+    
     section = 0 # Change this to the section you want to generate
-    print(len(split_data[section]))
+    
+    print(f"Processing Section {section} for {len(split_data[section])} Addresses")
 
     Generator(split_data[section],"Output_" + str(section))

@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-BITQUERY_API_KEY = os.getenv("BITQUERY_API_KEY")
+BITQUERY_API_KEY =  os.getenv("BITQUERY_API_KEY")
 url = "https://graphql.bitquery.io"
 
 
@@ -22,7 +22,11 @@ def get_address_details(public_address, inboundDepth=1, outboundDepth=1, limit=5
     except requests.exceptions as e:
         print("Error ", e)
 
-    print(response.text)
+    # print(response.text)
+    return response.json()
+    # save_file = open("temp", "w")  
+    # json.dump(response.json(), save_file, indent = 6)
+    # save_file.close()  
 
 
-get_address_details("35hK24tcLEWcgNA4JxpvbkNkoAcDGqQPsP")
+# get_address_details("35hK24tcLEWcgNA4JxpvbkNkoAcDGqQPsP")

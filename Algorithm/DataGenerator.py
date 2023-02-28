@@ -96,8 +96,8 @@ def Generator(addresses, filename, offset):
     for count, address in enumerate(addresses):
 
         print(f"Scanning {count+offset}) {address}")
-        if (count+offset == 101):
-            break
+        # if (count+offset == 101):
+        #     break
         try:
             address_details = get_address_details(address)
 
@@ -206,7 +206,7 @@ def split(a, n):
 if __name__ == '__main__':
     dataframe = pd.read_csv('./Scraper/cleaned_dataset/heist_addresses.csv')
     addresses = dataframe['# address'].tolist()
-    split_data = list(split(addresses, 10))
+    split_data = list(split(addresses, 100))
 
     section = 0  # Change this to the section you want to generate
     offset = 0  # chnage this to start from the nth row of the chosen section
@@ -214,4 +214,4 @@ if __name__ == '__main__':
     print(
         f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
 
-    Generator(split_data[section][offset:], "output_" + str(section), offset)
+    Generator(split_data[section][offset:], "Output_" + str(section), offset)

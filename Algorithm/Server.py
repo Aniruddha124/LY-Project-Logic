@@ -4,8 +4,10 @@ from TransactionDetails import get_transaction_details
 from BlackListed import blacklisted
 from Predict import predict
 import pickle
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello_world():

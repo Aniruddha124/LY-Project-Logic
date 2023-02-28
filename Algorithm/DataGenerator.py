@@ -206,9 +206,9 @@ def split(a, n):
 if __name__ == '__main__':
     dataframe = pd.read_csv('./Scraper/cleaned_dataset/heist_addresses.csv')
     addresses = dataframe['# address'].tolist()
-    split_data = list(split(addresses, 100))
+    split_data = list(split(addresses, 10))
 
-    section = 0  # Change this to the section you want to generate
+    section = 2  # Change this to the section you want to generate
     offset = 0  # chnage this to start from the nth row of the chosen section
 
     print(

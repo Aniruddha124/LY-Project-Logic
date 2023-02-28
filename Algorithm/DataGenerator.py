@@ -208,7 +208,7 @@ if __name__ == '__main__':
     addresses = dataframe['# address'].tolist()
     split_data = list(split(addresses, 10))
 
-    section = 2  # Change this to the section you want to generate
+    section = 0 # Change this to the section you want to generate
     offset = 0  # chnage this to start from the nth row of the chosen section
 
     print(

@@ -10,10 +10,7 @@ def get_complete_tx_details(address):
 })
     headers = {
     'Content-Type': 'application/json',
-<<<<<<< HEAD
-=======
     # 'X-API-KEY': 'BQYNQXWqKjX4b6WW8l1mMrBorTrUmJAM'
->>>>>>> 56a90eac6933e013334c6dc3c869ba7c40df5b2c
     'X-API-KEY': 'BQYE7w3gTyMpcsKHbIqFq8I03Ps7hZIB'
     }
 

@@ -92,8 +92,20 @@ def Generator(addresses, filename, offset):
         "transaction_" + str(filename) + '.csv'
     errFilepath = './Datasets_Generated/SkippedAddressInfo/' + \
         str(filename) + '_skipped.csv'
+    
+    
 
     for count, address in enumerate(addresses):
+        count += 1
+        if count % 50 == 0:
+            duration = 20
+            if count % 100 == 0:
+                duration = 50
+            print(
+                f"{bcolors.WARNING}Starting Sleep for {duration} secs{bcolors.ENDC}")
+            time.sleep(duration)
+            print(
+                f"{bcolors.WARNING}Ended Sleep{bcolors.ENDC}")
 
         print(f"Scanning {count+offset}) {address}")
         # if (count+offset == 101):
@@ -204,14 +216,14 @@ def split(a, n):
 
 
 if __name__ == '__main__':
-    dataframe = pd.read_csv('./Scraper/cleaned_dataset/heist_addresses.csv')
-    addresses = dataframe['# address'].tolist()
-    split_data = list(split(addresses, 10))
+    dataframe = pd.read_csv('./Datasets_Generated/SkippedAddressInfo/Output_7_skipped copy.csv')
+    addresses = dataframe['address'].tolist()
+    # split_data = list(split(addresses, 10))
 
     section = 0 # Change this to the section you want to generate
     offset = 0  # chnage this to start from the nth row of the chosen section
 
     print(
-        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
+        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
 
-    Generator(split_data[section][offset:], "Output_" + str(section), offset)
+    Generator(addresses[offset:], "Output_" + str(section), offset)

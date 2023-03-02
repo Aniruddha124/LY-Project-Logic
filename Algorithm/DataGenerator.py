@@ -216,11 +216,7 @@ def split(a, n):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    dataframe = pd.read_csv('./Datasets_Generated/SkippedAddressInfo/Output_0_skipped_copy.csv')
-=======
     dataframe = pd.read_csv('./Datasets_Generated/SkippedAddressInfo/Output_7_skipped copy.csv')
->>>>>>> 2b01e646dd975b453bec18b6b7409edc1b676882
     addresses = dataframe['address'].tolist()
     # split_data = list(split(addresses, 10))
 
@@ -229,9 +225,4 @@ if __name__ == '__main__':
 
     print(
         f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
-<<<<<<< HEAD
-    # print(addresses)
-=======
-
->>>>>>> 2b01e646dd975b453bec18b6b7409edc1b676882
     Generator(addresses[offset:], "Output_" + str(section), offset)

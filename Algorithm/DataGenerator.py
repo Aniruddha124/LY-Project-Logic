@@ -220,8 +220,8 @@ if __name__ == '__main__':
     addresses = dataframe['address'].tolist()
     # split_data = list(split(addresses, 10))
 
-    section = 5  # Change this to the section you want to generate
-    offset = 0  # change this to start from the nth row of the chosen section
+    section = 9  # Change this to the section you want to generate
+    offset = 1725  # change this to start from the nth row of the chosen section
 
     print(
         f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")

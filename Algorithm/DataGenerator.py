@@ -216,13 +216,13 @@ def split(a, n):
 
 
 if __name__ == '__main__':
-    dataframe = pd.read_csv('./Scraper/datasets_cleaned/white_1.csv')
+    dataframe = pd.read_csv("./Datasets_Generated/WhiteSkippedAddressInfo/Output_5_skipp.csv")
     addresses = dataframe['address'].tolist()
-    split_data = list(split(addresses, 10))
+    # split_data = list(split(addresses, 10))
 
     section = 9  # Change this to the section you want to generate
     offset = 1725  # change this to start from the nth row of the chosen section
 
     print(
-        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
-    Generator(split_data[section][offset:], "Output_" + str(section), offset)
+        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
+    Generator(addresses[offset:], "Output_" + str(section), offset)

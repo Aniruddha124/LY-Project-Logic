@@ -4,6 +4,7 @@ from TransactionDetails import get_transaction_details
 from BlackListed import blacklisted
 from Predict import predict
 from Score import Score
+from query import get_address_details
 import pickle
 # from flask_cors import CORS
 
@@ -45,6 +46,12 @@ def score(address):
 def is_blacklisted(address):
     isBlackListed = blacklisted(address)
     return isBlackListed
+
+# fetch only outgoing transactions for a given address
+@app.route('/tx_out_details/<address>')
+def tx_out_details(address):
+    details = get_address_details(address)
+    return details["data"]["bitcoin"]["outgoing_transactions"]
 
 if __name__ == '__main__':
     app.run(debug=True)

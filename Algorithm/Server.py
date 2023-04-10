@@ -3,11 +3,12 @@ from WalletDetails import get_wallet_details
 from TransactionDetails import get_transaction_details
 from BlackListed import blacklisted
 from Predict import predict
+from Score import Score
 import pickle
-from flask_cors import CORS
+# from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 @app.route('/')
 def hello_world():
@@ -24,6 +25,7 @@ def transaction_details(address):
     details = get_transaction_details(address)
     return details['data']
 
+# old score based on transactions
 @app.route('/predict/<address>')
 def predict_score(address):
     with open('./Models/dt_model', 'rb') as f:
@@ -32,6 +34,13 @@ def predict_score(address):
     json = {'total_malicious_tx': total_malicious_tx, 'malicious_score': malicious_score}
     return json
 
+# new score based on address
+@app.route('/score/<address>')
+def score(address):
+    score = Score(address)
+    print(f"Score:{score}")
+    return score
+    
 @app.route('/blacklisted/<address>')
 def is_blacklisted(address):
     isBlackListed = blacklisted(address)

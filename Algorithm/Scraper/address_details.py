@@ -215,12 +215,13 @@ def split(a, n):
 
 if __name__ == '__main__':
     dataframe = pd.read_csv("./datasets_cleaned/heist_addresses.csv")
-    addresses = dataframe['# address'].tolist()
-    split_data = list(split(addresses, 10))
+    # addresses = dataframe['# address'].tolist()
+    addresses=["1GrwDkr33gT6LuumniYjKEGjTLhsL5kmqC"]
+    # split_data = list(split(addresses, 10))
 
-    section = 1  # Change this to the section you want to generate
-    offset = 301  # change this to start from the nth row of the chosen section
+    section = 100  # Change this to the section you want to generate
+    offset = 0  # change this to start from the nth row of the chosen section
 
-    print(
-        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
+    # print(
+    #     f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
     Generator(addresses[offset:], "Output_" + str(section), offset)

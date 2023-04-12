@@ -100,7 +100,7 @@ def Generator(addresses, filename, offset):
         if count % 50 == 0:
             duration = 20
             if count % 100 == 0:
-                duration = 50
+                duration = 40
             print(
                 f"{bcolors.WARNING}Starting Sleep for {duration} secs{bcolors.ENDC}")
             time.sleep(duration)
@@ -216,13 +216,15 @@ def split(a, n):
 
 
 if __name__ == '__main__':
-    dataframe = pd.read_csv('./Scraper/datasets_cleaned/white_2.csv')
-    addresses = dataframe['address'].tolist()
-    split_data = list(split(addresses, 20))
+    dataframe = pd.read_csv("./Datasets_Generated/WhiteSkippedAddressInfo/Output_15_skipped copy.csv")
+    addresses = dataframe['address'].to
+    list()
+    # print(addresses)
+    # split_data = list(split(addresses, 20))
 
-    section = 0  # Change this to the section you want to generate
+    section = 5  # Change this to the section you want to generate
     offset = 0  # change this to start from the nth row of the chosen section
 
     print(
-        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(split_data[section])} Addresses from {offset}th row {bcolors.ENDC}")
-    Generator(split_data[section][offset:], "Output_" + str(section+10), offset)
+        f"{bcolors.UNDERLINE}{bcolors.OKGREEN}Processing Section {section} for {len(addresses[section])} Addresses from {offset}th row {bcolors.ENDC}")
+    Generator(addresses[offset:], "Output_" + str(section+10), offset)

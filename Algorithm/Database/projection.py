@@ -1,6 +1,20 @@
 from connection import Neo4jConnection
 
-conn = Neo4jConnection(uri="bolt://localhost:7687", user="username", pwd="password")
+conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
 # project node properties
-conn.query("CALL gds.graph.create.cypher('myGraph', 'MATCH (n) RETURN id(n) AS id', 'MATCH (n)-[r]->(m) RETURN id(n) AS source, id(m) AS target, type(r) AS type')")
+query = '''CALL gds.graph.project(
+  graphName: my-graph,
+  nodeProjection: String or List or Map,
+  relationshipProjection: String or List or Map,
+  configuration: Map
+) YIELD
+  graphName: String,
+  nodeProjection: Map,
+  nodeCount: Integer,
+  relationshipProjection: Map,
+  relationshipCount: Integer,
+  projectMillis: Integer'''
+
+conn.query(query,db='newdb')
+

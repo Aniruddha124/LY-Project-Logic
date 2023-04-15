@@ -6,10 +6,10 @@ from Predict import predict
 from Score import Score
 from query import get_address_details
 import pickle
-# from flask_cors import CORS
+from flask_cors import CORS
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 
 @app.route('/')
 def hello_world():

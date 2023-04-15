@@ -5,6 +5,7 @@ from BlackListed import blacklisted
 from Predict import predict
 from Score import Score
 from query import get_address_details
+from Database.fetchNodeData import fetch_node
 import pickle
 # from flask_cors import CORS
 
@@ -52,6 +53,12 @@ def is_blacklisted(address):
 def tx_out_details(address):
     details = get_address_details(address)
     return details["data"]["bitcoin"]["outgoing_transactions"]
+
+# get neo4j associated nodes
+@app.route('/fetch_node/<address>')
+def fetch_node_data(address):
+    data = fetch_node(address)
+    return data
 
 if __name__ == '__main__':
     app.run(debug=True)

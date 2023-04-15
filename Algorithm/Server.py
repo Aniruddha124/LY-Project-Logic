@@ -5,7 +5,7 @@ from BlackListed import blacklisted
 from Predict import predict
 from Score import Score
 from query import get_address_details
-from Database.fetchNodeData import fetch_node
+from fetchNodeData import fetch_node
 import pickle
 from flask_cors import CORS
 

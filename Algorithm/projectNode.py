@@ -4,6 +4,20 @@ import json
 import asyncio
 from FetchAssociatedAddress import get_associated_addresses
 
+async def create_node(conn, address):
+    conn.query(f"MERGE(a:Entity {{address: '{address}'}})", db='verdb-test')
+    return True
+
+async def create_relationship(conn, start_address, end_address):
+    conn.query(f'''
+    MATCH (a:Entity),(b:Entity)
+    WHERE a.address = '{start_address}' AND b.address = '{end_address}'
+    MERGE (a)-[r:LINK]->(b)
+    RETURN type(r)''',
+        db='verdb-test'
+    )
+    return True
+
 async def node_exists(conn,address):
     result = conn.query(f'''
     MATCH (a:Entity)
@@ -32,7 +46,8 @@ async def project_node(address):
         print("Node exists")
     else:
         print("Node does not exist")
-        await conn.query(f"MERGE(a:Entity {{address: '{address}'}})")
+        await create_node(conn, address)
+        # await conn.query(f"MERGE(a:Entity {{address: '{address}'}})",db='verdb-test')
         print(f"Node {address} created")
 
     
@@ -48,7 +63,8 @@ async def project_node(address):
                 print(f"Associated Node {associated_address} exists")
             else:
                 print(f"Associated Node {associated_address} does not exist")
-                await conn.query(f"MERGE(a:Entity {{address: '{associated_address}'}})")
+                await create_node(conn, address)
+                # await conn.query(f"MERGE(a:Entity {{address: '{associated_address}'}})", db='verdb-test')
                 print(f"Associated Node {associated_address} created")
 
             # check if relationship exists
@@ -57,7 +73,8 @@ async def project_node(address):
                     print(f"Relationship between {address} and {associated_address} exists")
                 else:
                     print(f"Relationship between {address} and {associated_address} does not exist")
-                    await conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})")
+                    await create_relationship(conn,address,associated_address)
+                    # await conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})", db='verdb-test')
                     print(f"Relationship between {address} and {associated_address} created")
 
     # fetching updated node data
@@ -76,6 +93,11 @@ async def project_node(address):
     }
 
 if __name__ == "__main__":
+    # conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
+
+    # associated_address = "30snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"
+    # print(conn.query(f"MERGE(a:Entity {{address: '{associated_address}'}})", db='verdb-test'))
+
     asyncio.run(project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
 
     # print(await project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))

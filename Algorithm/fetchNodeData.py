@@ -12,12 +12,10 @@ def fetch_node(address):
         RETURN DISTINCT startNode, relatedNode''',
         db='verdb-test'
     )
-    # results = [record for record in data[0].data()]
     results = []
     for i in range(len(data)):
         results.append(data[i].data())
-    # print(data[0])
-    # print(json_string)
+
     return {
         "data": results 
     }

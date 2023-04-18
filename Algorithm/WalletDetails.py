@@ -17,4 +17,4 @@ def get_wallet_details(address):
     # print(response.json())
     return(response.json())
 
-get_wallet_details("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")
+# get_wallet_details("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx")

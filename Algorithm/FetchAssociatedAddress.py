@@ -7,7 +7,7 @@ load_dotenv()
 BITQUERY_API_KEY =  os.getenv("BITQUERY_API_KEY")
 url = "https://graphql.bitquery.io"
 
-def get_tx_addresses(tx_hash):
+async def get_tx_addresses(tx_hash):
     payload = json.dumps({
    "query": " query ($tx_hash: String!) {\n  bitcoin {\n    inputs(\n      txHash: {is: $tx_hash}\n    ) {\n      inputAddress {\n        address\n      }\n    }\n  }\n}",
    "variables": f"{{\n  \"tx_hash\": \"{tx_hash}\"\n}}"
@@ -31,7 +31,7 @@ def get_tx_addresses(tx_hash):
 
 
 
-def get_associated_addresses(address):
+async def get_associated_addresses(address):
     payload = json.dumps({
     "query": "query ($address: String!) {\n  bitcoin {\n    transactions(\n      any: {inputAddress: {is: $address}}\n    ) {\n      hash\n    }\n  }\n}",
     "variables": f"{{\n  \"address\": \"{address}\"\n}}"
@@ -56,7 +56,7 @@ def get_associated_addresses(address):
     associated_addresses = []
     # fetching addresses from tx data
     for tx_hash in tx_list:
-        addresses_involved = get_tx_addresses(tx_hash)
+        addresses_involved = await get_tx_addresses(tx_hash)
         associated_addresses.extend(addresses_involved)
     
     final_addresses = list(set(associated_addresses))

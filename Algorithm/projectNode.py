@@ -1,6 +1,7 @@
 from connection import Neo4jConnection
 import re
 import json
+import asyncio
 from FetchAssociatedAddress import get_associated_addresses
 
 async def node_exists(conn,address):
@@ -23,15 +24,15 @@ async def relationship_exists(conn, start_address, end_address):
     )
     return len(result) > 0
 
-def project_node(address):
+async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
     # check if address node exists
-    if node_exists(conn, address):
+    if await node_exists(conn, address):
         print("Node exists")
     else:
         print("Node does not exist")
-        conn.query("MERGE(a:Entity {address: "+address+"})")
+        await conn.query(f"MERGE(a:Entity {{address: '{address}'}})")
         print(f"Node {address} created")
 
     
@@ -41,23 +42,23 @@ def project_node(address):
     if len(associated_addresses) > 0:
         associated_addresses.remove(address)
 
-    for associated_address in associated_addresses:
-        # check if associated address node exists
-        if node_exists(conn, associated_address):
-            print(f"Associated Node {associated_address} exists")
-        else:
-            print(f"Associated Node {associated_address} does not exist")
-            await conn.query("MERGE(a:Entity {address: "+associated_address+"})")
-            print(f"Associated Node {associated_address} created")
-
-        # check if relationship exists
         for associated_address in associated_addresses:
-            if relationship_exists(conn, address, associated_address):
-                print(f"Relationship between {address} and {associated_address} exists")
+            # check if associated address node exists
+            if await node_exists(conn, associated_address):
+                print(f"Associated Node {associated_address} exists")
             else:
-                print(f"Relationship between {address} and {associated_address} does not exist")
-                await conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})")
-                print(f"Relationship between {address} and {associated_address} created")
+                print(f"Associated Node {associated_address} does not exist")
+                await conn.query(f"MERGE(a:Entity {{address: '{associated_address}'}})")
+                print(f"Associated Node {associated_address} created")
+
+            # check if relationship exists
+            for associated_address in associated_addresses:
+                if await relationship_exists(conn, address, associated_address):
+                    print(f"Relationship between {address} and {associated_address} exists")
+                else:
+                    print(f"Relationship between {address} and {associated_address} does not exist")
+                    await conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})")
+                    print(f"Relationship between {address} and {associated_address} created")
 
     # fetching updated node data
     data = conn.query(f'''
@@ -75,7 +76,9 @@ def project_node(address):
     }
 
 if __name__ == "__main__":
-    print(project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
+    asyncio.run(project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
+
+    # print(await project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
     
     # conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
     # print(node_exists(conn,"2snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))

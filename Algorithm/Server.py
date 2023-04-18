@@ -67,7 +67,7 @@ def fetch_node_data(address):
 # project address data to neo4j and return associated nodes i.e. updated graph
 @app.route('/project_node/<address>')
 def project_node_data(address):
-    data = project_node(address)
+    data = asyncio.run(project_node(address))
     parsed_data = parseNodeData(data)
     return parsed_data
 

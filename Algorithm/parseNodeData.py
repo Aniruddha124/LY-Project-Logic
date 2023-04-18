@@ -10,18 +10,20 @@ def parseNodeData(data):
 
     for entry in data['data']:
         start_address = entry['startNode']['address']
-        start_balance = entry['startNode']['balance']
+        # start_balance = entry['startNode']['balance']
         related_address = entry['relatedNode']['address']
-        related_balance = entry['relatedNode']['balance']
+        # related_balance = entry['relatedNode']['balance']
         
         # Check if start node already exists
         if start_address not in nodes:
-            nodes[start_address] = {'id': node_id, 'label': start_address, 'balance': start_balance}
+            # nodes[start_address] = {'id': node_id, 'label': start_address, 'balance': start_balance}
+            nodes[start_address] = {'id': node_id, 'label': start_address}
             node_id += 1
         
         # Check if related node already exists
         if related_address not in nodes:
-            nodes[related_address] = {'id': node_id, 'label': related_address, 'balance': related_balance}
+            # nodes[related_address] = {'id': node_id, 'label': related_address, 'balance': related_balance}
+            nodes[related_address] = {'id': node_id, 'label': related_address}
             node_id += 1
         
         # Create an edge between the two nodes

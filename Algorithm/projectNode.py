@@ -38,6 +38,15 @@ async def relationship_exists(conn, start_address, end_address):
     )
     return len(result) > 0
 
+async def fetch_data(conn, address):
+    data = conn.query(f'''
+        MATCH (startNode)-[*]-(relatedNode)
+        WHERE startNode.address = '{address}'
+        RETURN DISTINCT startNode, relatedNode''',
+        db='verdb-test'
+    )
+    return data 
+
 async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
@@ -78,12 +87,7 @@ async def project_node(address):
                     
     
     # fetching updated node data
-    data = conn.query(f'''
-        MATCH (startNode)-[*]-(relatedNode)
-        WHERE startNode.address = '{address}'
-        RETURN DISTINCT startNode, relatedNode''',
-        db='verdb-test'
-    )
+    data = await fetch_data(conn, address)
     conn.close()
     results = []
     for i in range(len(data)):
@@ -98,4 +102,4 @@ if __name__ == "__main__":
     # print(node_exists(conn,"2snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
     # print(relationship_exists(conn,"19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm","2snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
 
-    asyncio.run(project_node("bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"))
+    asyncio.run(project_node("1NDStkokJ9EL7P8SV2HUv6qzLZw8vdEZPv"))

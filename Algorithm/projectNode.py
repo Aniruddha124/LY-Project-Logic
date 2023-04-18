@@ -6,11 +6,13 @@ from FetchAssociatedAddress import get_associated_addresses
 def node_exists(conn,address):
     result = conn.query(f'''
     MATCH (a:Entity)
-    WHERE a.address = '19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm'
+    WHERE a.address = '{address}'
     RETURN a''',
         db='verdb-test'
     )
-    return result.single() is not None
+
+    return len(result) > 0
+
 
 def relationship_exists(conn, start_address, end_address):
     result = conn.query(f'''
@@ -19,7 +21,7 @@ def relationship_exists(conn, start_address, end_address):
     RETURN r''',
         db='verdb-test'
     )
-    return result.single() is not None
+    return len(result) > 0
 
 def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
@@ -71,4 +73,7 @@ def project_node(address):
 if __name__ == "__main__":
     print(project_node("19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
     
+    # conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
+    # print(node_exists(conn,"2snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
+    # print(relationship_exists(conn,"19snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm","2snqSYnDSC4mDbv3pJuYgYqm5ctqwAxnm"))
 

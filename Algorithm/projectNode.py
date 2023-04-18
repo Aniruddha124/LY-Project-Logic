@@ -3,7 +3,7 @@ import re
 import json
 from FetchAssociatedAddress import get_associated_addresses
 
-def node_exists(conn,address):
+async def node_exists(conn,address):
     result = conn.query(f'''
     MATCH (a:Entity)
     WHERE a.address = '{address}'
@@ -14,7 +14,7 @@ def node_exists(conn,address):
     return len(result) > 0
 
 
-def relationship_exists(conn, start_address, end_address):
+async def relationship_exists(conn, start_address, end_address):
     result = conn.query(f'''
     MATCH (a:Entity)-[r]-(b:Entity)
     WHERE a.address = '{start_address}' AND b.address = '{end_address}'
@@ -32,10 +32,14 @@ def project_node(address):
     else:
         print("Node does not exist")
         conn.query("MERGE(a:Entity {address: "+address+"})")
-        print("Node created")
+        print(f"Node {address} created")
 
     
-    associated_addresses = get_associated_addresses(address)
+    associated_addresses = await get_associated_addresses(address)
+
+    # remove address from associated addresses
+    if len(associated_addresses) > 0:
+        associated_addresses.remove(address)
 
     for associated_address in associated_addresses:
         # check if associated address node exists
@@ -43,7 +47,7 @@ def project_node(address):
             print(f"Associated Node {associated_address} exists")
         else:
             print(f"Associated Node {associated_address} does not exist")
-            conn.query("MERGE(a:Entity {address: "+associated_address+"})")
+            await conn.query("MERGE(a:Entity {address: "+associated_address+"})")
             print(f"Associated Node {associated_address} created")
 
         # check if relationship exists
@@ -52,7 +56,7 @@ def project_node(address):
                 print(f"Relationship between {address} and {associated_address} exists")
             else:
                 print(f"Relationship between {address} and {associated_address} does not exist")
-                conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})")
+                await conn.query(f"MERGE (a:Entity {{address: '{address}'}})-[r:LINK]->(b:Entity {{address: '{associated_address}'}})")
                 print(f"Relationship between {address} and {associated_address} created")
 
     # fetching updated node data

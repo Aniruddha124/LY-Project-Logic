@@ -7,7 +7,9 @@ from Score import Score
 from query import get_address_details
 from fetchNodeData import fetch_node
 from parseNodeData import parseNodeData
+from projectNode import project_node
 import pickle
+import asyncio
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -59,6 +61,13 @@ def tx_out_details(address):
 @app.route('/fetch_node/<address>')
 def fetch_node_data(address):
     data = fetch_node(address)
+    parsed_data = parseNodeData(data)
+    return parsed_data
+
+# project address data to neo4j and return associated nodes i.e. updated graph
+@app.route('/project_node/<address>')
+def project_node_data(address):
+    data = project_node(address)
     parsed_data = parseNodeData(data)
     return parsed_data
 

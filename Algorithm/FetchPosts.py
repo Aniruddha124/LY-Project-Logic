@@ -5,7 +5,7 @@ import os
 from requests_oauthlib import OAuth1Session
 import json
 import time
-import twitter
+# import twitter
 
 # load_dotenv()
 # api_key = os.getenv("TWITTER_API_KEY")
@@ -108,18 +108,18 @@ def t2():
 
 if __name__ == "__main__":
 
-    load_dotenv()
-    api_key = os.getenv("TWITTER_API_KEY")
-    api_secret_key = os.getenv("TWITTER_API_SECRET_KEY")
-    access_token = os.getenv("TWITTER_ACCESS_TOKEN")
-    access_token_secret = os.getenv("TWITTER_ACCESS_SECRET_TOKEN")
-    bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
-    consumer_key = os.getenv("TWITTER_API_KEY")
-    consumer_secret = os.getenv("TWITTER_API_SECRET_KEY")
+    # load_dotenv()
+    # api_key = os.getenv("TWITTER_API_KEY")
+    # api_secret_key = os.getenv("TWITTER_API_SECRET_KEY")
+    # access_token = os.getenv("TWITTER_ACCESS_TOKEN")
+    # access_token_secret = os.getenv("TWITTER_ACCESS_SECRET_TOKEN")
+    # bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
+    # consumer_key = os.getenv("TWITTER_API_KEY")
+    # consumer_secret = os.getenv("TWITTER_API_SECRET_KEY")
 
-    # reddit_data = fetch_reddit("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx", "bitcoin")
-    twitter_data = fetch_twitter("hello world", api_key, api_secret_key, access_token, access_token_secret, bearer_token)
+    reddit_data = fetch_reddit("bc1qwukmzzjqn5hwsp4uaswc4c53gc0xz5asrv0prx", "bitcoin")
+    # twitter_data = fetch_twitter("hello world", api_key, api_secret_key, access_token, access_token_secret, bearer_token)
     # print(reddit_data)
     # print(len(reddit_data))
-    print(twitter_data)
+    # print(twitter_data)
     # print(len(twitter_data))

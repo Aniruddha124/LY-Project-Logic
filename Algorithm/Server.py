@@ -6,6 +6,7 @@ from Predict import predict
 from Score import Score
 from query import get_address_details
 from fetchNodeData import fetch_node
+from FetchPosts import fetch_reddit
 from parseNodeData import parseNodeData
 from projectNode import project_node
 import pickle
@@ -70,6 +71,14 @@ def project_node_data(address):
     data = asyncio.run(project_node(address))
     parsed_data = parseNodeData(data)
     return parsed_data
+
+
+# fetch data from reddit
+@app.route('/fetch_posts/<address>')
+def fetch_poatsts_data(address):
+    data=fetch_reddit(address,"bitcoin")
+    print(data)
+    return data
 
 if __name__ == '__main__':
     app.run(debug=True)

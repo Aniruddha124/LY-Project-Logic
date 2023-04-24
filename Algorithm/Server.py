@@ -75,7 +75,7 @@ def project_node_data(address):
 
 # fetch data from reddit
 @app.route('/fetch_posts/<address>')
-def fetch_poatsts_data(address):
+def fetch_posts_data(address):
     data=fetch_reddit(address,"bitcoin")
     print(data)
     return data

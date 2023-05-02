@@ -55,11 +55,13 @@ async def fetch_data(conn, address):
 async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
-    score = Score(address)
+    score = Score(address)['score']
+    
 
     # check if address node exists
     if await node_exists(conn, address):
         print("Node exists")
+        await update_node(conn,address,score)
     else:
         print("Node does not exist")
         await create_node(conn, address, score)

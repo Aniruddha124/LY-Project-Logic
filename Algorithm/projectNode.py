@@ -3,9 +3,14 @@ import re
 import json
 import asyncio
 from FetchAssociatedAddress import get_associated_addresses
+from Score import Score
 
-async def create_node(conn, address):
-    conn.query(f"MERGE(a:Entity {{address: '{address}'}})", db='verdb-test')
+async def create_node(conn, address, score):
+    conn.query(f"MERGE(a:Entity {{address: '{address}', score: '{score}'}})", db='verdb-test')
+    return True
+
+async def update_node(conn, address, score):
+    conn.query(f"MATCH(a:Entity {{address: '{address}'}}) SET a.score = '{score}'", db='verdb-test')
     return True
 
 async def create_relationship(conn, start_address, end_address):
@@ -50,12 +55,14 @@ async def fetch_data(conn, address):
 async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
+    score = Score(address)
+
     # check if address node exists
     if await node_exists(conn, address):
         print("Node exists")
     else:
         print("Node does not exist")
-        await create_node(conn, address)
+        await create_node(conn, address, score)
         # await conn.query(f"MERGE(a:Entity {{address: '{address}'}})",db='verdb-test')
         print(f"Node {address} created")
 
@@ -72,7 +79,7 @@ async def project_node(address):
                 print(f"Associated Node {associated_address} exists")
             else:
                 print(f"Associated Node {associated_address} does not exist")
-                await create_node(conn, associated_address)
+                await create_node(conn, associated_address, -1)
                 print(f"Relationship between {address} and {associated_address} created")
                 
 

@@ -23,7 +23,7 @@ def hello_world():
 @app.route('/wallet/<address>')
 def wallet_details(address):
     details = get_wallet_details(address)
-    # print(details['data'])
+    print(details['data'])
     return details['data']
 
 @app.route('/transactions/<address>')

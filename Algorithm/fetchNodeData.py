@@ -10,7 +10,7 @@ def fetch_node(address):
         MATCH (startNode)-[*]-(relatedNode)
         WHERE startNode.address = '{address}'
         RETURN DISTINCT startNode, relatedNode''',
-        db='verdb-test'
+        db='verdb'
     )
     results = []
     for i in range(len(data)):

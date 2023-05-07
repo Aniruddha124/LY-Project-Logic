@@ -6,11 +6,11 @@ from FetchAssociatedAddress import get_associated_addresses
 from Score import Score
 
 async def create_node(conn, address, score):
-    conn.query(f"MERGE(a:Entity {{address: '{address}', score: '{score}'}})", db='verdb-test')
+    conn.query(f"MERGE(a:Entity {{address: '{address}', score: '{score}'}})", db='verdb')
     return True
 
 async def update_node(conn, address, score):
-    conn.query(f"MATCH(a:Entity {{address: '{address}'}}) SET a.score = '{score}'", db='verdb-test')
+    conn.query(f"MATCH(a:Entity {{address: '{address}'}}) SET a.score = '{score}'", db='verdb')
     return True
 
 async def create_relationship(conn, start_address, end_address):
@@ -19,7 +19,7 @@ async def create_relationship(conn, start_address, end_address):
     WHERE a.address = '{start_address}' AND b.address = '{end_address}'
     MERGE (a)-[r:LINK]->(b)
     RETURN type(r)''',
-        db='verdb-test'
+        db='verdb'
     )
     return True
 
@@ -28,7 +28,7 @@ async def node_exists(conn,address):
     MATCH (a:Entity)
     WHERE a.address = '{address}'
     RETURN a''',
-        db='verdb-test'
+        db='verdb'
     )
 
     return len(result) > 0
@@ -39,7 +39,7 @@ async def relationship_exists(conn, start_address, end_address):
     MATCH (a:Entity)-[r]-(b:Entity)
     WHERE a.address = '{start_address}' AND b.address = '{end_address}'
     RETURN r''',
-        db='verdb-test'
+        db='verdb'
     )
     return len(result) > 0
 
@@ -48,7 +48,7 @@ async def fetch_data(conn, address):
         MATCH (startNode)-[*]-(relatedNode)
         WHERE startNode.address = '{address}'
         RETURN DISTINCT startNode, relatedNode''',
-        db='verdb-test'
+        db='verdb'
     )
     return data 
 

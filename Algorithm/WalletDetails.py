@@ -1,5 +1,11 @@
 import requests
 import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+BITQUERY_API_KEY =  os.getenv("BITQUERY_API_KEY")
+url = "https://graphql.bitquery.io"
 
 def get_wallet_details(address):
     url = "https://graphql.bitquery.io"
@@ -10,7 +16,7 @@ def get_wallet_details(address):
     })
     headers = {
     'Content-Type': 'application/json',
-    'X-API-KEY': 'BQYNQXWqKjX4b6WW8l1mMrBorTrUmJAM'
+    'X-API-KEY': BITQUERY_API_KEY
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)

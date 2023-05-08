@@ -21,12 +21,12 @@ def seed(csv_file, endpoint_url, start_index):
     # loop over the addresses and hit the endpoint
     for i, address in enumerate(df["address"], start=start_index):
         url = endpoint_url.format(address)
-        response = requests.get(url)
 
         # handle the response as needed
-        if response.status_code == 200:
+        try:
+            response = requests.get(url)
             print(f"{bcolors.OKGREEN}Node for address {i}: {address} created successfully{bcolors.ENDC}")
-        else:
+        except:
             print(f"{bcolors.FAIL}Failed to create node for address {i}: {address}{bcolors.ENDC}")
 
 if __name__ == "__main__":

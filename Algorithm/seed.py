@@ -14,7 +14,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def seed(csv_file, endpoint_url):
+def seed(csv_file, endpoint_url, start_index):
 
     df = pd.read_csv(csv_file, usecols=["address"], skiprows=range(1, start_index+1))
 
@@ -30,4 +30,5 @@ def seed(csv_file, endpoint_url):
             print(f"{bcolors.FAIL}Failed to create node for address {i}: {address}{bcolors.ENDC}")
 
 if __name__ == "__main__":
-    seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}")
+    start_index = 0
+    seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}", start_index)

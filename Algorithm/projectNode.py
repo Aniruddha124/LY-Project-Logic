@@ -55,7 +55,8 @@ async def fetch_data(conn, address):
 async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
-    score = Score(address)['score']
+    # score = Score(address)['score']
+    score = 2 # while seeding
     
 
     # check if address node exists

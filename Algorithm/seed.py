@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import csv
 import requests
 
@@ -14,22 +16,26 @@ class bcolors:
 
 def seed(csv_file, endpoint_url):
 
-    with open(csv_file, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        # addresses = [row["address"] for row in reader]
-        addresses = [row["address"] for row in reader if "address" in row]
-
+    df = pd.read_csv(csv_file, usecols=["address"])
 
     # loop over the addresses and hit the endpoint
-    for address in addresses:
+    for address in df["address"]:
         url = endpoint_url.format(address)
-        response = requests.get(url)
+        # response = requests.get(url)
 
         # handle the response as needed
-        if response.status_code == 200:
+        # if response.status_code == 200:
+        #     print(f"{bcolors.OKGREEN}Node for {address} created successfully{bcolors.ENDC}")
+        # else:
+        #     print(f"{bcolors.FAIL}Failed to create node for {address}{bcolors.ENDC}")
+        try:
+            response = requests.get(url)
             print(f"{bcolors.OKGREEN}Node for {address} created successfully{bcolors.ENDC}")
-        else:
+        except:
             print(f"{bcolors.FAIL}Failed to create node for {address}{bcolors.ENDC}")
+
+        
+
 
 if __name__ == "__main__":
     seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}")

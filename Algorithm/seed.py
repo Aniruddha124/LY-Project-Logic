@@ -16,19 +16,18 @@ class bcolors:
 
 def seed(csv_file, endpoint_url):
 
-    df = pd.read_csv(csv_file, usecols=["address"])
+    df = pd.read_csv(csv_file, usecols=["address"], skiprows=range(1, start_index+1))
 
     # loop over the addresses and hit the endpoint
-    for address in df["address"]:
+    for i, address in enumerate(df["address"], start=start_index):
         url = endpoint_url.format(address)
         response = requests.get(url)
 
         # handle the response as needed
         if response.status_code == 200:
-            print(f"{bcolors.OKGREEN}Node for {address} created successfully{bcolors.ENDC}")
+            print(f"{bcolors.OKGREEN}Node for address {i}: {address} created successfully{bcolors.ENDC}")
         else:
-            print(f"{bcolors.FAIL}Failed to create node for {address}{bcolors.ENDC}")
-
+            print(f"{bcolors.FAIL}Failed to create node for address {i}: {address}{bcolors.ENDC}")
 
 if __name__ == "__main__":
     seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}")

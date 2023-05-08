@@ -16,7 +16,9 @@ def seed(csv_file, endpoint_url):
 
     with open(csv_file, 'r') as csvfile:
         reader = csv.reader(csvfile)
-        addresses = [row["address"] for row in reader]
+        # addresses = [row["address"] for row in reader]
+        addresses = [row["address"] for row in reader if "address" in row]
+
 
     # loop over the addresses and hit the endpoint
     for address in addresses:

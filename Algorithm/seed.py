@@ -24,11 +24,14 @@ def seed(csv_file, endpoint_url, start_index):
 
         # handle the response as needed
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=300) # wait for a maximum of 5 minutes
             print(f"{bcolors.OKGREEN}Node for address {i}: {address} created successfully{bcolors.ENDC}")
+        except requests.Timeout:
+            print(f"{bcolors.WARNING}Timed out while waiting for response for address {i}: {address}{bcolors.ENDC}")
         except:
             print(f"{bcolors.FAIL}Failed to create node for address {i}: {address}{bcolors.ENDC}")
 
+            
 if __name__ == "__main__":
     start_index = 0
     seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}", start_index)

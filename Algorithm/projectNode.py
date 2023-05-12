@@ -44,8 +44,9 @@ async def relationship_exists(conn, start_address, end_address):
     return len(result) > 0
 
 async def fetch_data(conn, address):
+    print("fetching..")
     data = conn.query(f'''
-        MATCH (startNode)-[*]-(relatedNode)
+        MATCH (startNode)-[*..20]-(relatedNode)
         WHERE startNode.address = '{address}'
         RETURN DISTINCT startNode, relatedNode''',
         db='verdb'
@@ -55,8 +56,8 @@ async def fetch_data(conn, address):
 async def project_node(address):
     conn = Neo4jConnection(uri="bolt://localhost:7687", user="neo4j", pwd="12345678")
 
-    # score = Score(address)['score']
-    score = 2 # while seeding
+    score = Score(address)['score']
+    # score = 2 # while seeding
     
 
     # check if address node exists
@@ -95,7 +96,7 @@ async def project_node(address):
                     await create_relationship(conn,address,associated_address)
                     print(f"Relationship between {address} and {associated_address} created")
                     
-    
+    print("projection complete ")
     # fetching updated node data
     data = await fetch_data(conn, address)
     conn.close()

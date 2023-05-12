@@ -21,24 +21,8 @@ def seed(csv_file, endpoint_url, start_index):
     # loop over the addresses and hit the endpoint
     for i, address in enumerate(df["address"], start=start_index):
         url = endpoint_url.format(address)
-<<<<<<< HEAD
-        # response = requests.get(url)
 
         # handle the response as needed
-        # if response.status_code == 200:
-        #     print(f"{bcolors.OKGREEN}Node for {address} created successfully{bcolors.ENDC}")
-        # else:
-        #     print(f"{bcolors.FAIL}Failed to create node for {address}{bcolors.ENDC}")
-        try:
-            response = requests.get(url)
-            print(f"{bcolors.OKGREEN}Node for {address} created successfully{bcolors.ENDC}")
-        except:
-            print(f"{bcolors.FAIL}Failed to create node for {address}{bcolors.ENDC}")
-
-        
-
-=======
-
         # handle the response as needed
         try:
             response = requests.get(url, timeout=300) # wait for a maximum of 5 minutes
@@ -47,9 +31,7 @@ def seed(csv_file, endpoint_url, start_index):
             print(f"{bcolors.WARNING}Timed out while waiting for response for address {i}: {address}{bcolors.ENDC}")
         except:
             print(f"{bcolors.FAIL}Failed to create node for address {i}: {address}{bcolors.ENDC}")
->>>>>>> 5c1510d051b97fb25b71cc8458ab2d581367d93d
 
-            
 if __name__ == "__main__":
-    start_index = 0
+    start_index = 99
     seed("./Datasets_Generated/Merged_Datasets/Black_Merged.csv", "http://localhost:5000/project_node/{}", start_index)

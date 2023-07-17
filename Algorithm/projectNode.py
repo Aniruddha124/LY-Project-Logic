@@ -46,7 +46,7 @@ async def relationship_exists(conn, start_address, end_address):
 async def fetch_data(conn, address):
     print("fetching..")
     data = conn.query(f'''
-        MATCH (startNode)-[*..20]-(relatedNode)
+        MATCH (startNode)-[*..10]-(relatedNode)
         WHERE startNode.address = '{address}'
         RETURN DISTINCT startNode, relatedNode''',
         db='verdb'
